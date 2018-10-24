@@ -1,0 +1,157 @@
+{
+    "participants": [
+      {
+        "name": "Person 1"
+      },
+      {
+        "name": "Person 2"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536457993322,
+        "content": "All with time.",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536457976845,
+        "content": "Doing this manually is really boring",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536457971857,
+        "content": "Next someone should write a tool to generate test data!",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536457967477,
+        "content": "This test data will come in handy after all",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536457960146,
+        "content": "Alright cool, I'll do that",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536457958017,
+        "content": "\u00f0\u009f\u0098\u0084",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536457940361,
+        "content": "A search tool that actually allowed phrase searches would be fantastic",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536456653667,
+        "content": "Maybe yah, we could work something out there. I'm kinda busy but throw it up there and send me a link",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456653113,
+        "content": "Do you want to help? We could work together via GitHub",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456632026,
+        "content": "I'll have to try doing that soon",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456625444,
+        "content": ":)",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456623119,
+        "content": "Tantivy sounds like it would be perfect for the job",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456618449,
+        "content": "I agree! Maybe we could even use tantivy",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536456612440,
+        "content": "Also, Rust is an amazing programming language and it would be really nice to use to write a search tool in for messenger.",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536456609569,
+        "content": "It might be!",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536456601713,
+        "content": "Person: \u00f3\u00b0\u0080\u0080",
+        "sticker": {
+          "uri": "messages/stickers_used/39178562_1505197616293642_5411344281094848512_n_369239263222822.png"
+        },
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456579115,
+        "content": "You know, test data really is the best. I wonder if this is going to be used someday",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456572699,
+        "content": "I love test data!",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536456565494,
+        "content": "This is some test data!",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456564535,
+        "content": "\u00f0\u009f\u0098\u0084",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
+        "timestamp_ms": 1536456562318,
+        "content": "Hi",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1536456556507,
+        "content": "Hello",
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 1",
+        "timestamp_ms": 1534881043627,
+        "content": "Person 1 just joined Messenger! Be the first to send a welcome message or sticker.",
+        "type": "Generic"
+      }
+    ],
+    "title": "Person 1",
+    "is_still_participant": true,
+    "thread_type": "Regular",
+    "thread_path": "SomeThread_path"
+  }
