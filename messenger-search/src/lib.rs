@@ -13,23 +13,26 @@ use tantivy::Index;
 use tantivy::schema::*;
 use tantivy::collector::TopCollector;
 use tantivy::query::QueryParser;
+use tantivy::directory::Directory;
 use error::Error;
 use data_format::{Conversation, StoredMessage};
 
-/// Generates an index for the conversation described by the JSON in the given path,
-/// storing the generated index in the given folder (pre-existing indexes will be
+/// Generates an index for the conversation described by the JSON at the given path,
+/// storing the generated index in the given directory (pre-existing indexes will be
 /// over-written).
 /// 
-/// Returns the `opstamp` of the last document that was successfully committed or
-/// an error if something went wrong.
-// TODO: Figure out how to generalize over creating index in RAM and on disk (for testing)
-pub fn generate_index<P: AsRef<Path>>(index_folder: P, json_path: P) -> Result<u64, Error> {
+/// Returns the a tuple of the `Index` and the `opstamp` of the last successfully
+/// committed document, or an error if something went wrong.
+pub fn generate_index<D: Directory, P: AsRef<Path>>(
+    index_dir: D,
+    json_path: P
+) -> Result<(Index, u64), Error> {
     let mut schema_builder = SchemaBuilder::default();
     schema_builder.add_text_field("content", TEXT | STORED);
-    schema_builder.add_i64_field("timestamp", INT_STORED);
+    schema_builder.add_i64_field("timestamp", INT_STORED | INT_INDEXED);
 
     let schema = schema_builder.build();
-    let index = Index::create_in_dir(index_folder, schema.clone())?;
+    let index = Index::create(index_dir, schema.clone())?;
     // Writer created with 50 MB of heap
     let mut index_writer = index.writer(50_000_000)?;
 
@@ -46,7 +49,7 @@ pub fn generate_index<P: AsRef<Path>>(index_folder: P, json_path: P) -> Result<u
         });
     }
 
-    Ok(index_writer.commit()?)
+    Ok((index, index_writer.commit()?))
 }
 
 /// Runs the given query with the given index.
@@ -58,7 +61,7 @@ pub fn generate_index<P: AsRef<Path>>(index_folder: P, json_path: P) -> Result<u
 /// If any tantivy document returned from the query fails to parse into a
 /// `StoredMessage`, this function will panic.
 pub fn search(
-    index: Index,
+    index: &Index,
     query: &str
 ) -> Result<Vec<StoredMessage>, Error> {
     let schema = index.schema();
@@ -101,12 +104,15 @@ pub fn open_index_in<P: AsRef<Path>>(folder: P) -> Result<Index, Error> {
 
 #[cfg(test)]
 mod test {
-    use super::{generate_index, search, open_index_in};
+    use super::{generate_index, search};
+    use tantivy::directory::RAMDirectory;
 
     #[test]
     fn test_generate_index_and_query() {
-        // let _ = generate_index("./index-test/", "sample-data/message.json").unwrap();
+        let (idx, _) = generate_index(RAMDirectory::create(), "sample-data/message.json").unwrap();
 
-        println!("{:?}", search(open_index_in("./index-test/").unwrap(), "test data"));
+        // Some simple asserts to ensure things are still working
+        assert_eq!(search(&idx, "test data").unwrap().len(), 5);
+        assert_eq!(search(&idx, "github").unwrap().len(), 1);
     }
 }
