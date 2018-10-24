@@ -1,0 +1,6 @@
+[package]
+name = "messenger-search-cli"
+version = "0.1.0"
+authors = ["Cldfire"]
+
+[dependencies]

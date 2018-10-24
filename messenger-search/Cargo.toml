@@ -1,0 +1,6 @@
+[package]
+name = "messenger-search"
+version = "0.1.0"
+authors = ["Cldfire"]
+
+[dependencies]

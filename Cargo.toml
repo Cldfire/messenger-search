@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "messenger-search-cli",
+    "messenger-search"
+]
