@@ -1,6 +1,7 @@
 use error::Error;
 use std::path::Path;
 use std::fs;
+use serde_derive::Deserialize;
 
 /// The root struct that represents a messenger conversation.
 #[derive(Deserialize, Debug)]
@@ -12,7 +13,7 @@ pub struct Conversation {
 
 impl Conversation {
     pub fn from_json_str(json: &str) -> Result<Self, Error> {
-        Ok(::serde_json::from_str(json)?)
+        Ok(serde_json::from_str(json)?)
     }
 
     pub fn from_json_file<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
@@ -33,7 +34,7 @@ pub struct ConversationHeader {
 
 impl ConversationHeader {
     pub fn from_json_str(json: &str) -> Result<Self, Error> {
-        Ok(::serde_json::from_str(json)?)
+        Ok(serde_json::from_str(json)?)
     }
 }
 
@@ -67,7 +68,7 @@ pub struct StoredMessage {
 
 impl StoredMessage {
     pub fn from_json_str(json: &str) -> Result<Self, Error> {
-        Ok(::serde_json::from_str(json)?)
+        Ok(serde_json::from_str(json)?)
     }
 }
 

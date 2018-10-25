@@ -1,8 +1,6 @@
 extern crate serde;
-#[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
-#[macro_use]
 extern crate tantivy;
 
 pub mod data_format;
@@ -13,6 +11,7 @@ use tantivy::Index;
 use tantivy::schema::*;
 use tantivy::collector::TopCollector;
 use tantivy::query::QueryParser;
+use tantivy::doc;
 use error::Error;
 use data_format::{Conversation, StoredMessage};
 

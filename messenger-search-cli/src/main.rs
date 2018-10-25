@@ -1,5 +1,4 @@
 extern crate messenger_search;
-#[macro_use]
 extern crate structopt;
 extern crate chrono;
 
