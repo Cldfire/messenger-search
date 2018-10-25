@@ -6,3 +6,4 @@ authors = ["Cldfire"]
 [dependencies]
 messenger-search = { path = "../messenger-search" }
 structopt = "0.2"
+chrono = "0.4"

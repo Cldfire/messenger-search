@@ -1,12 +1,14 @@
 extern crate messenger_search;
 #[macro_use]
 extern crate structopt;
+extern crate chrono;
 
 use std::path::PathBuf;
 use structopt::StructOpt;
 use std::env;
 use messenger_search::{search, generate_index, IndexStoreLocation::*};
 use messenger_search::error::Error;
+use chrono::{Local, TimeZone, Datelike};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "msngr-search")]
@@ -32,7 +34,15 @@ fn main() -> Result<(), Error> {
     let search_results = search(&idx, &opt.query)?;
 
     for message in search_results {
-        println!("<{:?}> {:?}: {:?}", message.timestamp_ms[0], message.sender_name[0], message.content[0]);
+        // TODO: Let user choose timezone to display
+        let dt = Local.timestamp_millis(message.timestamp_ms[0]);
+        println!(
+            "<{} ({:?})> {}: {}",
+            dt.format("%Y-%m-%d%l:%M %p"),
+            dt.weekday(),
+            message.sender_name[0],
+            message.content[0]
+        );
     }
     
     Ok(())
