@@ -115,6 +115,18 @@
       },
       {
         "sender_name": "Person 2",
+        "timestamp_ms": 1536456576823,
+        "content": "Person 2 sent a photo.",
+        "photos": [
+          {
+            "uri": "path/to/conv/folder/and/image.jpg",
+            "creation_timestamp": 1536456576
+          }
+        ],
+        "type": "Generic"
+      },
+      {
+        "sender_name": "Person 2",
         "timestamp_ms": 1536456574754,
         "content": "https://some-link.site/thing",
         "share": {

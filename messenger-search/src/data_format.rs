@@ -50,6 +50,7 @@ pub struct Message {
     pub sticker: Option<Sticker>,
     /// This field should be `Some` when the `MessageType` is `Share`.
     pub share: Option<Share>,
+    pub photos: Option<Vec<Photo>>,
     #[serde(rename = "type")]
     pub message_type: MessageType
 }
@@ -78,6 +79,12 @@ pub struct Sticker {
 #[derive(Deserialize, Debug)]
 pub struct Share {
     pub link: String
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Photo {
+    pub uri: String,
+    pub creation_timestamp: i64
 }
 
 #[derive(Deserialize, Debug)]
