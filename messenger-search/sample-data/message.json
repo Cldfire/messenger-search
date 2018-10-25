@@ -115,6 +115,15 @@
       },
       {
         "sender_name": "Person 2",
+        "timestamp_ms": 1536456574754,
+        "content": "https://some-link.site/thing",
+        "share": {
+          "link": "https://some-link.site/thing/probably-got-special-facebook-treatment"
+        },
+        "type": "Share"
+      },
+      {
+        "sender_name": "Person 2",
         "timestamp_ms": 1536456572699,
         "content": "I love test data!",
         "type": "Generic"

@@ -5,47 +5,66 @@ extern crate serde_json;
 #[macro_use]
 extern crate tantivy;
 
-mod data_format;
-mod error;
+pub mod data_format;
+pub mod error;
 
 use std::path::Path;
 use tantivy::Index;
 use tantivy::schema::*;
 use tantivy::collector::TopCollector;
 use tantivy::query::QueryParser;
-use tantivy::directory::Directory;
 use error::Error;
 use data_format::{Conversation, StoredMessage};
 
+/// Used to specify where to store a generated index.
+pub enum IndexStoreLocation<P: AsRef<Path>> {
+    Ram,
+    /// File-backed index storage. Provide the path to a folder to store the index in
+    /// 
+    /// Pre-existing indexes will be overwritten.
+    File(P)
+}
+
+impl<P: AsRef<Path>> IndexStoreLocation<P> {
+    pub fn create_index(self, schema: Schema) -> Result<Index, Error> {
+        Ok(match self {
+            IndexStoreLocation::Ram => Index::create_in_ram(schema),
+            IndexStoreLocation::File(dir) => Index::create_in_dir(dir, schema)?
+        })
+    }
+}
+
 /// Generates an index for the conversation described by the JSON at the given path,
-/// storing the generated index in the given directory (pre-existing indexes will be
-/// over-written).
+/// storing the generated index in the given location.
 /// 
 /// Returns the a tuple of the `Index` and the `opstamp` of the last successfully
 /// committed document, or an error if something went wrong.
-pub fn generate_index<D: Directory, P: AsRef<Path>>(
-    index_dir: D,
+pub fn generate_index<P: AsRef<Path>>(
+    index_store_loc: IndexStoreLocation<P>,
     json_path: P
 ) -> Result<(Index, u64), Error> {
     let mut schema_builder = SchemaBuilder::default();
+    schema_builder.add_text_field("sender_name", TEXT | STORED);
     schema_builder.add_text_field("content", TEXT | STORED);
-    schema_builder.add_i64_field("timestamp", INT_STORED | INT_INDEXED);
+    schema_builder.add_i64_field("timestamp_ms", INT_STORED | INT_INDEXED);
 
     let schema = schema_builder.build();
-    let index = Index::create(index_dir, schema.clone())?;
+    let index = index_store_loc.create_index(schema.clone())?;
     // Writer created with 50 MB of heap
     let mut index_writer = index.writer(50_000_000)?;
 
     // Get fields to create documents with them
+    let sender_name = schema.get_field("sender_name").unwrap();
     let content = schema.get_field("content").unwrap();
-    let timestamp = schema.get_field("timestamp").unwrap();
+    let timestamp_ms = schema.get_field("timestamp_ms").unwrap();
 
     let conversation = Conversation::from_json_file(json_path)?;
 
     for message in conversation.messages {
         index_writer.add_document(doc! {
+            sender_name => message.sender_name,
             content => message.content,
-            timestamp => message.timestamp_ms
+            timestamp_ms => message.timestamp_ms
         });
     }
 
@@ -60,6 +79,7 @@ pub fn generate_index<D: Directory, P: AsRef<Path>>(
 /// 
 /// If any tantivy document returned from the query fails to parse into a
 /// `StoredMessage`, this function will panic.
+// TODO: Implement passing a timestamp and finding messages from a certain time
 pub fn search(
     index: &Index,
     query: &str
@@ -104,12 +124,11 @@ pub fn open_index_in<P: AsRef<Path>>(folder: P) -> Result<Index, Error> {
 
 #[cfg(test)]
 mod test {
-    use super::{generate_index, search};
-    use tantivy::directory::RAMDirectory;
+    use super::{generate_index, search, IndexStoreLocation::*};
 
     #[test]
     fn test_generate_index_and_query() {
-        let (idx, _) = generate_index(RAMDirectory::create(), "sample-data/message.json").unwrap();
+        let (idx, _) = generate_index(Ram, "sample-data/message.json").unwrap();
 
         // Some simple asserts to ensure things are still working
         assert_eq!(search(&idx, "test data").unwrap().len(), 5);

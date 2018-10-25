@@ -5,12 +5,9 @@ use std::fs;
 /// The root struct that represents a messenger conversation.
 #[derive(Deserialize, Debug)]
 pub struct Conversation {
-    pub participants: Vec<Participant>,
-    pub messages: Vec<Message>,
-    pub title: String,
-    pub is_still_participant: bool,
-    pub thread_type: ThreadType,
-    pub thread_path: String
+    #[serde(flatten)]
+    pub header: ConversationHeader,
+    pub messages: Vec<Message>
 }
 
 impl Conversation {
@@ -21,6 +18,22 @@ impl Conversation {
     pub fn from_json_file<P: AsRef<Path>>(path: P) -> Result<Self, Error> {
         let json_string = fs::read_to_string(path)?;
         Self::from_json_str(&json_string)
+    }
+}
+
+/// Top-level information (everything but messages).
+#[derive(Deserialize, Debug)]
+pub struct ConversationHeader {
+    pub participants: Vec<Participant>,
+    pub title: String,
+    pub is_still_participant: bool,
+    pub thread_type: ThreadType,
+    pub thread_path: String
+}
+
+impl ConversationHeader {
+    pub fn from_json_str(json: &str) -> Result<Self, Error> {
+        Ok(::serde_json::from_str(json)?)
     }
 }
 
@@ -35,6 +48,8 @@ pub struct Message {
     pub timestamp_ms: i64,
     pub content: String,
     pub sticker: Option<Sticker>,
+    /// This field should be `Some` when the `MessageType` is `Share`.
+    pub share: Option<Share>,
     #[serde(rename = "type")]
     pub message_type: MessageType
 }
@@ -44,7 +59,8 @@ pub struct Message {
 // TODO: Get rid of vecs
 #[derive(Deserialize, Debug)]
 pub struct StoredMessage {
-    pub timestamp: Vec<i64>,
+    pub sender_name: Vec<String>,
+    pub timestamp_ms: Vec<i64>,
     pub content: Vec<String>
 }
 
@@ -60,8 +76,14 @@ pub struct Sticker {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct Share {
+    pub link: String
+}
+
+#[derive(Deserialize, Debug)]
 pub enum MessageType {
-    Generic
+    Generic,
+    Share
 }
 
 #[derive(Deserialize, Debug)]
